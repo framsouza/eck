@@ -1,0 +1,77 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: elastic-prd
+  namespace: infra
+spec:
+  http:
+    service:
+      metadata:
+        creationTimestamp: null
+      spec: {}
+    tls:
+      certificate: {}
+      selfSignedCertificate:
+        disabled: true
+  nodeSets:
+  - config:
+      cluster.routing.allocation.awareness.attributes: zone
+      http.max_content_length: 200mb
+      node.attr.zone: europe-west3-a
+      node.data: true
+      node.ingest: true
+      node.master: true
+      node.store.allow_mmap: false
+      reindex.remote.whitelist: 10.156.0.44:9200
+      xpack.security.authc:
+        anonymous:
+          authz_exception: false
+          roles: superuser
+          username: anonymous
+    count: 3
+    name: data
+    podTemplate:
+      metadata: {}
+      spec:
+        containers:
+        - env:
+          - name: ES_JAVA_OPTS
+            value: -Xms3g -Xmx3g
+          name: elasticsearch
+          resources:
+            limits:
+              memory: 6Gi
+            requests:
+              cpu: 1500m
+              memory: 6Gi
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - |
+            bin/elasticsearch-plugin install --batch repository-gcs
+          name: install-plugins
+          resources: {}
+        nodeSelector:
+          pool: infra
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 30Gi
+        storageClassName: fast-europe-west3-a
+  podDisruptionBudget:
+    metadata:
+      creationTimestamp: null
+    spec:
+      minAvailable: 2
+      selector:
+        matchLabels:
+          elasticsearch.k8s.elastic.co/cluster-name: elastic-prd
+  updateStrategy:
+    changeBudget: {}
+  version: 7.1.1
