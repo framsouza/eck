@@ -1,24 +1,207 @@
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
-  name: elastic-prd
+  name: elastic-prod
   namespace: infra
 spec:
   http:
     service:
       metadata:
         creationTimestamp: null
-      spec: {}
     tls:
-      certificate: {}
       selfSignedCertificate:
         disabled: true
   nodeSets:
-  - config:
+  - name: data-zone-a
+    count: 1
+    config:
+      node.attr.zone: europe-west3-a
       cluster.routing.allocation.awareness.attributes: zone
       http.max_content_length: 200mb
-      node.attr.zone: europe-west3-a
       node.data: true
+      node.ingest: false
+      node.master: false
+      node.store.allow_mmap: false
+      reindex.remote.whitelist: 10.156.0.44:9200
+      xpack.security.authc:
+        anonymous:
+          authz_exception: false
+          roles: superuser
+          username: anonymous
+    volumeClaimTemplates:
+    - metadata:
+        name: es-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 30Gi
+        storageClassName: fast-europe-west3
+    podTemplate:
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: failure-domain.beta.kubernetes.io/zone
+                  operator: In
+                  values:
+                  - europe-west3-a
+              - matchExpressions:
+                - key: pool
+                  operator: In
+                  values:
+                  - elasticsearch
+        nodeSelector:
+          pool: elasticsearch
+        containers:
+        - name: elasticsearch
+          env:
+          - name: ES_JAVA_OPTS
+            value: -Xms2g -Xmx2g
+          resources:
+            limits:
+              memory: 4Gi
+            requests:
+              memory: 4Gi
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - |
+            bin/elasticsearch-plugin install --batch repository-gcs
+          name: install-plugins
+  - name: data-zone-b
+    count: 1
+    config:
+      node.attr.zone: europe-west3-b
+      cluster.routing.allocation.awareness.attributes: zone
+      http.max_content_length: 200mb
+      node.data: true
+      node.ingest: false
+      node.master: false
+      node.store.allow_mmap: false
+      reindex.remote.whitelist: 10.156.0.44:9200
+      xpack.security.authc:
+        anonymous:
+          authz_exception: false
+          roles: superuser
+          username: anonymous
+    volumeClaimTemplates:
+    - metadata:
+        name: es-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 30Gi
+        storageClassName: fast-europe-west3
+    podTemplate:
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: pool
+                  operator: In
+                  values:
+                  - elasticsearch
+              - matchExpressions:
+                - key: failure-domain.beta.kubernetes.io/zone
+                  operator: In
+                  values:
+                  - europe-west3-b
+        nodeSelector:
+          pool: elasticsearch
+        containers:
+        - name: elasticsearch
+          env:
+          - name: ES_JAVA_OPTS
+            value: -Xms2g -Xmx2g
+          resources:
+            limits:
+              memory: 4Gi
+            requests:
+              memory: 4Gi
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - |
+            bin/elasticsearch-plugin install --batch repository-gcs
+          name: install-plugins
+  - name: data-zone-c
+    count: 1
+    config:
+      node.attr.zone: europe-west3-c
+      cluster.routing.allocation.awareness.attributes: zone
+      http.max_content_length: 200mb
+      node.data: true
+      node.ingest: false
+      node.master: false
+      node.store.allow_mmap: false
+      reindex.remote.whitelist: 10.156.0.44:9200
+      xpack.security.authc:
+        anonymous:
+          authz_exception: false
+          roles: superuser
+          username: anonymous
+    volumeClaimTemplates:
+    - metadata:
+        name: es-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 30Gi
+        storageClassName: fast-europe-west3
+    podTemplate:
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: pool
+                  operator: In
+                  values:
+                  - elasticsearch
+              - matchExpressions:
+                - key: failure-domain.beta.kubernetes.io/zone
+                  operator: In
+                  values:
+                  - europe-west3-c
+        nodeSelector:
+          pool: elasticsearch
+        containers:
+        - name: elasticsearch
+          env:
+          - name: ES_JAVA_OPTS
+            value: -Xms2g -Xmx2g
+          resources:
+            limits:
+              memory: 4Gi
+            requests:
+              memory: 4Gi
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - |
+            bin/elasticsearch-plugin install --batch repository-gcs
+          name: install-plugins
+  - name: master-zone-a
+    count: 1
+    config:
+      cluster.routing.allocation.awareness.attributes: zone
+      node.attr.zone: europe-west3-a
+      http.max_content_length: 200mb
+      node.data: false
       node.ingest: true
       node.master: true
       node.store.allow_mmap: false
@@ -28,22 +211,44 @@ spec:
           authz_exception: false
           roles: superuser
           username: anonymous
-    count: 3
-    name: data
-    podTemplate:
-      metadata: {}
+    volumeClaimTemplates:
+    - metadata:
+        name: es-master
       spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+        storageClassName: fast-europe-west3
+    podTemplate:
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: pool
+                  operator: In
+                  values:
+                  - elasticsearch
+              - matchExpressions:
+                - key: failure-domain.beta.kubernetes.io/zone
+                  operator: In
+                  values:
+                  - europe-west3-a
+        nodeSelector:
+          pool: elasticsearch
         containers:
-        - env:
+        - name: elasticsearch
+          env:
           - name: ES_JAVA_OPTS
-            value: -Xms3g -Xmx3g
-          name: elasticsearch
+            value: -Xms1g -Xmx1g
           resources:
             limits:
-              memory: 6Gi
+              memory: 2Gi
             requests:
-              cpu: 1500m
-              memory: 6Gi
+              memory: 2Gi
         initContainers:
         - command:
           - sh
@@ -51,27 +256,128 @@ spec:
           - |
             bin/elasticsearch-plugin install --batch repository-gcs
           name: install-plugins
-          resources: {}
-        nodeSelector:
-          pool: infra
+  - name: master-zone-b
+    count: 1
+    config:
+      cluster.routing.allocation.awareness.attributes: zone
+      node.attr.zone: europe-west3-b
+      http.max_content_length: 200mb
+      node.data: false
+      node.ingest: true
+      node.master: true
+      node.store.allow_mmap: false
+      reindex.remote.whitelist: 10.156.0.44:9200
+      xpack.security.authc:
+        anonymous:
+          authz_exception: false
+          roles: superuser
+          username: anonymous
     volumeClaimTemplates:
     - metadata:
-        name: elasticsearch-data
+        name: es-master
       spec:
         accessModes:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 30Gi
-        storageClassName: fast-europe-west3-a
-  podDisruptionBudget:
-    metadata:
-      creationTimestamp: null
-    spec:
-      minAvailable: 2
-      selector:
-        matchLabels:
-          elasticsearch.k8s.elastic.co/cluster-name: elastic-prd
+            storage: 10Gi
+        storageClassName: fast-europe-west3
+    podTemplate:
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: pool
+                  operator: In
+                  values:
+                  - elasticsearch
+              - matchExpressions:
+                - key: failure-domain.beta.kubernetes.io/zone
+                  operator: In
+                  values:
+                  - europe-west3-b
+        nodeSelector:
+          pool: elasticsearch
+        containers:
+        - name: elasticsearch
+          env:
+          - name: ES_JAVA_OPTS
+            value: -Xms1g -Xmx1g
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              memory: 2Gi
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - |
+            bin/elasticsearch-plugin install --batch repository-gcs
+          name: install-plugins
+  - name: master-zone-c
+    count: 1
+    config:
+      cluster.routing.allocation.awareness.attributes: zone
+      node.attr.zone: europe-west3-c
+      http.max_content_length: 200mb
+      node.data: false
+      node.ingest: true
+      node.master: true
+      node.store.allow_mmap: false
+      reindex.remote.whitelist: 10.156.0.44:9200
+      xpack.security.authc:
+        anonymous:
+          authz_exception: false
+          roles: superuser
+          username: anonymous
+    volumeClaimTemplates:
+    - metadata:
+        name: es-master
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+        storageClassName: fast-europe-west3
+    podTemplate:
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: pool
+                  operator: In
+                  values:
+                  - elasticsearch
+              - matchExpressions:
+                - key: failure-domain.beta.kubernetes.io/zone
+                  operator: In
+                  values:
+                  - europe-west3-c
+        nodeSelector:
+          pool: elasticsearch
+        containers:
+        - name: elasticsearch
+          env:
+          - name: ES_JAVA_OPTS
+            value: -Xms1g -Xmx1g
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              memory: 2Gi
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - |
+            bin/elasticsearch-plugin install --batch repository-gcs
+          name: install-plugins
   updateStrategy:
     changeBudget: {}
   version: 7.1.1
