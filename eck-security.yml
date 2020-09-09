@@ -1,16 +1,9 @@
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
-  name: elastic-prod
+  name: elastic-prod-sec
   namespace: infra
 spec:
-  http:
-    service:
-      metadata:
-        creationTimestamp: null
-    tls:
-      selfSignedCertificate:
-        disabled: true
   nodeSets:
   - name: data-zone-a
     count: 1
@@ -23,14 +16,9 @@ spec:
       node.master: false
       node.store.allow_mmap: false
       reindex.remote.whitelist: 10.156.0.44:9200
-      xpack.security.authc:
-        anonymous:
-          authz_exception: false
-          roles: superuser
-          username: anonymous
     volumeClaimTemplates:
     - metadata:
-        name: es-data
+        name: es-data-sec
       spec:
         accessModes:
         - ReadWriteOnce
@@ -97,14 +85,9 @@ spec:
       node.master: false
       node.store.allow_mmap: false
       reindex.remote.whitelist: 10.156.0.44:9200
-      xpack.security.authc:
-        anonymous:
-          authz_exception: false
-          roles: superuser
-          username: anonymous
     volumeClaimTemplates:
     - metadata:
-        name: es-data
+        name: es-data-sec
       spec:
         accessModes:
         - ReadWriteOnce
@@ -171,14 +154,9 @@ spec:
       node.master: false
       node.store.allow_mmap: false
       reindex.remote.whitelist: 10.156.0.44:9200
-      xpack.security.authc:
-        anonymous:
-          authz_exception: false
-          roles: superuser
-          username: anonymous
     volumeClaimTemplates:
     - metadata:
-        name: es-data
+        name: es-data-sec
       spec:
         accessModes:
         - ReadWriteOnce
@@ -245,14 +223,9 @@ spec:
       node.master: true
       node.store.allow_mmap: false
       reindex.remote.whitelist: 10.156.0.44:9200
-      xpack.security.authc:
-        anonymous:
-          authz_exception: false
-          roles: superuser
-          username: anonymous
     volumeClaimTemplates:
     - metadata:
-        name: es-master
+        name: es-master-sec
       spec:
         accessModes:
         - ReadWriteOnce
@@ -319,14 +292,9 @@ spec:
       node.master: true
       node.store.allow_mmap: false
       reindex.remote.whitelist: 10.156.0.44:9200
-      xpack.security.authc:
-        anonymous:
-          authz_exception: false
-          roles: superuser
-          username: anonymous
     volumeClaimTemplates:
     - metadata:
-        name: es-master
+        name: es-master-sec
       spec:
         accessModes:
         - ReadWriteOnce
@@ -393,14 +361,9 @@ spec:
       node.master: true
       node.store.allow_mmap: false
       reindex.remote.whitelist: 10.156.0.44:9200
-      xpack.security.authc:
-        anonymous:
-          authz_exception: false
-          roles: superuser
-          username: anonymous
     volumeClaimTemplates:
     - metadata:
-        name: es-master
+        name: es-master-sec
       spec:
         accessModes:
         - ReadWriteOnce
