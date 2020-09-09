@@ -379,5 +379,7 @@ spec:
             bin/elasticsearch-plugin install --batch repository-gcs
           name: install-plugins
   updateStrategy:
-    changeBudget: {}
+    changeBudget:
+      maxSurge: 1
+      maxUnavailable: 1
   version: 7.1.1
