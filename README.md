@@ -19,5 +19,5 @@ These informations supose you're using GKE with a dedicated node pool with a Kub
 - Dedicated nodes;
 - Zone awareness;
 - GCS repository plugin;
-- Node Affinity & Selector;
+- Node & Pod Affinity; 
 - ReadinessProbe;

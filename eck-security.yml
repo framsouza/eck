@@ -1,7 +1,7 @@
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
-  name: elastic-prod-sec
+  name: elastic-prod
   namespace: infra
 spec:
   nodeSets:
@@ -41,6 +41,12 @@ spec:
                   operator: In
                   values:
                   - elasticsearch
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  elasticsearch.k8s.elastic.co/cluster-name: elastic-prod
+              topologyKey: kubernetes.io/hostname
         nodeSelector:
           pool: elasticsearch
         containers:
@@ -109,6 +115,12 @@ spec:
                   operator: In
                   values:
                   - europe-west3-b
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  elasticsearch.k8s.elastic.co/cluster-name: elastic-prod
+              topologyKey: kubernetes.io/hostname
         nodeSelector:
           pool: elasticsearch
         containers:
@@ -177,6 +189,12 @@ spec:
                   operator: In
                   values:
                   - europe-west3-c
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  elasticsearch.k8s.elastic.co/cluster-name: elastic-prod
+              topologyKey: kubernetes.io/hostname
         nodeSelector:
           pool: elasticsearch
         containers:
@@ -245,6 +263,12 @@ spec:
                   operator: In
                   values:
                   - europe-west3-a
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  elasticsearch.k8s.elastic.co/cluster-name: elastic-prod
+              topologyKey: kubernetes.io/hostname
         nodeSelector:
           pool: elasticsearch
         containers:
@@ -313,6 +337,12 @@ spec:
                   operator: In
                   values:
                   - europe-west3-b
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  elasticsearch.k8s.elastic.co/cluster-name: elastic-prod
+              topologyKey: kubernetes.io/hostname
         nodeSelector:
           pool: elasticsearch
         containers:
@@ -381,6 +411,12 @@ spec:
                   operator: In
                   values:
                   - europe-west3-c
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  elasticsearch.k8s.elastic.co/cluster-name: elastic-prod
+              topologyKey: kubernetes.io/hostname
         nodeSelector:
           pool: elasticsearch
         containers:
