@@ -1,6 +1,8 @@
 # ECK
 
-This is a collection of showcase example to help you to use **Elastic Cloud on Kubernetes** on **GCP**.
+This is a collection of showcase example to help you to use **Elastic Cloud on Kubernetes** on **GCP** as a real production environment.
+
+These informations supose you're using GKE with a dedicated node pool with a Kubernetes Label (In this example pool:Elasticsearch )
 
 ### Content
 - StorageClass manifest;
@@ -10,11 +12,12 @@ This is a collection of showcase example to help you to use **Elastic Cloud on K
 ### To do
 
 - Setup my own certificate
+- Cronjob with snapshot config
 
 ### Features implemented
 
-- Zone awareness;
 - Dedicated nodes;
+- Zone awareness;
 - GCS repository plugin;
 - Node Affinity & Selector;
 - ReadinessProbe;
