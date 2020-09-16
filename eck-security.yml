@@ -429,4 +429,6 @@ spec:
       selector:
         matchLabels:
           elasticsearch.k8s.elastic.co/cluster-name: elastic-prod
-  version: 7.1.1
+  version: 7.9.1
+  secureSettings:
+  - secretName: gcs-credentials

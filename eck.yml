@@ -30,7 +30,7 @@ spec:
           username: anonymous
     volumeClaimTemplates:
     - metadata:
-        name: es-data
+        name: elasticsearch-data
       spec:
         accessModes:
         - ReadWriteOnce
@@ -104,7 +104,7 @@ spec:
           username: anonymous
     volumeClaimTemplates:
     - metadata:
-        name: es-data
+        name: elasticsearch-data
       spec:
         accessModes:
         - ReadWriteOnce
@@ -178,7 +178,7 @@ spec:
           username: anonymous
     volumeClaimTemplates:
     - metadata:
-        name: es-data
+        name: elasticsearch-data
       spec:
         accessModes:
         - ReadWriteOnce
@@ -252,7 +252,7 @@ spec:
           username: anonymous
     volumeClaimTemplates:
     - metadata:
-        name: es-master
+        name: elasticsearch-data
       spec:
         accessModes:
         - ReadWriteOnce
@@ -326,7 +326,7 @@ spec:
           username: anonymous
     volumeClaimTemplates:
     - metadata:
-        name: es-master
+        name: elasticsearch-data
       spec:
         accessModes:
         - ReadWriteOnce
@@ -400,7 +400,7 @@ spec:
           username: anonymous
     volumeClaimTemplates:
     - metadata:
-        name: es-master
+        name: elasticsearch-data
       spec:
         accessModes:
         - ReadWriteOnce
@@ -466,4 +466,6 @@ spec:
       selector:
         matchLabels:
           elasticsearch.k8s.elastic.co/cluster-name: elastic-prod
-  version: 7.1.1
+  version: 7.9.1
+  secureSettings:
+  - secretName: gcs-credentials
