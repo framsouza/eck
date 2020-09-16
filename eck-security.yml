@@ -15,7 +15,6 @@ spec:
       node.ingest: false
       node.master: false
       node.store.allow_mmap: false
-      reindex.remote.whitelist: 10.156.0.44:9200
     volumeClaimTemplates:
     - metadata:
         name: es-data-sec
@@ -84,7 +83,6 @@ spec:
       node.ingest: false
       node.master: false
       node.store.allow_mmap: false
-      reindex.remote.whitelist: 10.156.0.44:9200
     volumeClaimTemplates:
     - metadata:
         name: es-data-sec
@@ -153,7 +151,6 @@ spec:
       node.ingest: false
       node.master: false
       node.store.allow_mmap: false
-      reindex.remote.whitelist: 10.156.0.44:9200
     volumeClaimTemplates:
     - metadata:
         name: es-data-sec
@@ -222,7 +219,6 @@ spec:
       node.ingest: true
       node.master: true
       node.store.allow_mmap: false
-      reindex.remote.whitelist: 10.156.0.44:9200
     volumeClaimTemplates:
     - metadata:
         name: es-master-sec
@@ -291,7 +287,6 @@ spec:
       node.ingest: true
       node.master: true
       node.store.allow_mmap: false
-      reindex.remote.whitelist: 10.156.0.44:9200
     volumeClaimTemplates:
     - metadata:
         name: es-master-sec
@@ -360,7 +355,6 @@ spec:
       node.ingest: true
       node.master: true
       node.store.allow_mmap: false
-      reindex.remote.whitelist: 10.156.0.44:9200
     volumeClaimTemplates:
     - metadata:
         name: es-master-sec
