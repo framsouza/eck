@@ -4,6 +4,14 @@ metadata:
   name: elastic-prod
   namespace: infra
 spec:
+  http:
+    service:
+      metadata:
+        annotations:
+          cloud.google.com/load-balancer-type: Internal
+          elasticsearch.k8s.elastic.co/node-master: "false"
+      spec:
+        type: LoadBalancer
   nodeSets:
   - name: data-zone-a
     count: 1
@@ -17,7 +25,7 @@ spec:
       node.store.allow_mmap: false
     volumeClaimTemplates:
     - metadata:
-        name: es-data-sec
+        name: elasticsearch-data
       spec:
         accessModes:
         - ReadWriteOnce
@@ -91,7 +99,7 @@ spec:
       node.store.allow_mmap: false
     volumeClaimTemplates:
     - metadata:
-        name: es-data-sec
+        name: elasticsearch-data
       spec:
         accessModes:
         - ReadWriteOnce
@@ -165,7 +173,7 @@ spec:
       node.store.allow_mmap: false
     volumeClaimTemplates:
     - metadata:
-        name: es-data-sec
+        name: elasticsearch-data
       spec:
         accessModes:
         - ReadWriteOnce
@@ -239,7 +247,7 @@ spec:
       node.store.allow_mmap: false
     volumeClaimTemplates:
     - metadata:
-        name: es-master-sec
+        name: elasticsearch-data
       spec:
         accessModes:
         - ReadWriteOnce
@@ -313,7 +321,7 @@ spec:
       node.store.allow_mmap: false
     volumeClaimTemplates:
     - metadata:
-        name: es-master-sec
+        name: elasticsearch-data
       spec:
         accessModes:
         - ReadWriteOnce
@@ -387,7 +395,7 @@ spec:
       node.store.allow_mmap: false
     volumeClaimTemplates:
     - metadata:
-        name: es-master-sec
+        name: elasticsearch-data
       spec:
         accessModes:
         - ReadWriteOnce
