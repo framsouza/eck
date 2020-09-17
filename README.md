@@ -2,7 +2,7 @@
 
 This is a collection of showcase example to help you to use **Elastic Cloud on Kubernetes** on **GCP** as a real production environment.
 
-These examples supose you're using GKE node pool with a Kubernetes Label (In this example **pool** : **Elasticsearch**) and also a Kubernetes manifest called **infra**.
+These examples supose you're using GKE node pool with a Kubernetes Label (In this example **pool** : **Elasticsearch**) and also a Kubernetes namespace called **infra**.
 
 ### Content
 - StorageClass manifest
@@ -25,7 +25,7 @@ These examples supose you're using GKE node pool with a Kubernetes Label (In thi
 ### Manifest explained
 This section will guide you to understand each piece of Elasticsearch manifest.
 
-##### HTTP Settings
+#### HTTP Settings
 Here we're creating a Internal loadbalancer on GCP attaching **only** data nodes on it. The default behavior will create a service with all Elasticsearch nodes attached which works perfect, but here I'm removing master node from the LoadBalancer so they can focus on maintaining global cluster state.
 
 ```apiVersion: elasticsearch.k8s.elastic.co/v1
@@ -44,7 +44,7 @@ spec:
         type: LoadBalancer
 ```
 
-##### Node Configuration
+#### Node Configuration
 We can relate this section with elasticsearch.yml file, which means we're defining one Elasticsearch node name called **data-zone-a** as a data node. You can see that the other roles are disabled.
 
 We're also defining routing allocation called **zone** and attributing the routing for a specific zone **europe-west3-a**.
