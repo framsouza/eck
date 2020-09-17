@@ -18,10 +18,9 @@ These examples supose you're using GKE node pool with a Kubernetes Label (In thi
 - Resource management 
 
 ### Architecture 
-**ATTACH IMAGE HERE**
-- 6 Kubernetes nodes spread across 3 zones
-- 3 Elasticsearch master nodes
-- 3 Elasticsearch data nodes
+
+![ECK Architecture](img/architecture.png)
+
 
 ### Manifest explained
 This section will guide you to understand each piece of Elasticsearch manifest.
