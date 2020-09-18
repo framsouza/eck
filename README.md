@@ -2,7 +2,11 @@
 
 This is a collection of showcase example to help you to use **Elastic Cloud on Kubernetes** on **GCP** as a real production environment.
 
-These examples supose you're using GKE node pool with a Kubernetes Label (In this example **pool** : **Elasticsearch**) and also a Kubernetes namespace called **infra**.
+### Before start
+If you wanna run this example without make any change on the manifest, please make sure you're using the following configuration:
+- GKE node pool with a Kubernetes label called **pool** : **elasticsearch**
+- Kubernetes namespace called **infra**
+- GKE Cluster running on **europe-west3** region
 
 ### Content
 - StorageClass manifest
