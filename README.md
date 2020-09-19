@@ -1,5 +1,5 @@
 # ECK
-===================
+- - - - 
 
 This is a collection of showcase example to help you to use **Elastic Cloud on Kubernetes** on **GCP** as a real production environment using the following features:
 
@@ -23,7 +23,7 @@ If you wanna run this example without make any change on the manifest, please ma
 
 ### Features implemented
 
-- [HTTP Settings](#HTTP Settings "Go to HTTP Settings")
+- [HTTP Settings](####HTTP Settings "Go to HTTP Settings")
 - Node Configuration
 - Volume Claim
 - Node Affinity & Pod Affinity
@@ -40,7 +40,7 @@ GKE Instance type: **e2-standard-2 (2 vCPUs, 8 GB memory)**
 ### Manifest explained
 This section will guide you to understand each piece of Elasticsearch manifest.
 
-#### HTTP Settings
+#### HTTP Settings ####
 Here we're creating a Internal loadbalancer on GCP attaching **only** data nodes on it. The default behavior will create a service with all Elasticsearch nodes attached which works perfect, but here I'm removing master node from the LoadBalancer so they can focus on maintaining global cluster state.
 
 ```apiVersion: elasticsearch.k8s.elastic.co/v1
