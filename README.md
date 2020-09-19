@@ -23,7 +23,7 @@ If you wanna run this example without make any change on the manifest, please ma
 
 ### Features implemented
 
-- [HTTP Settings](####HTTP Settings "Go to HTTP Settings")
+- [HTTP Settings](#http-settings "Go to HTTP Settings")
 - Node Configuration
 - Volume Claim
 - Node Affinity & Pod Affinity
