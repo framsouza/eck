@@ -53,7 +53,7 @@ We can relate this section with elasticsearch.yml file, which means we're defini
 
 We're also defining routing allocation called **zone** and attributing the routing for a specific zone **europe-west3-a**.
 
- By default, Elasticsearch uses memory mapping (mmap) to efficiently access indices. Usually, default values for virtual address space on Linux distributions are too low for Elasticsearch to work properly, which may result in out-of-memory exceptions, that's why we're using *node.store.allow_mmap : false*
+By default, Elasticsearch uses memory mapping (mmap) to efficiently access indices. Usually, default values for virtual address space on Linux distributions are too low for Elasticsearch to work properly, which may result in out-of-memory exceptions, that's why we're using **node.store.allow_mmap : false**
 
 
 ```
@@ -69,6 +69,52 @@ We're also defining routing allocation called **zone** and attributing the routi
       node.ingest: false
       node.master: false
       node.store.allow_mmap: false
+```
+
+#### Volume Claim
+For production workloads is highly recommended to configure your own volume claim template with the desired storage capacity. Here we're using a StorageClass called **fast-europe-west3** with 30Gi.
+
+
+```
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 30Gi
+        storageClassName: fast-europe-west3
+```
+
+#### Pod template
+
+```
+    podTemplate:
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: failure-domain.beta.kubernetes.io/zone
+                  operator: In
+                  values:
+                  - europe-west3-a
+              - matchExpressions:
+                - key: pool
+                  operator: In
+                  values:
+                  - elasticsearch
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  elasticsearch.k8s.elastic.co/cluster-name: elastic-prod
+              topologyKey: kubernetes.io/hostname
+        nodeSelector:
+          pool: elasticsearch
 ```
 
 ### To be implemented
