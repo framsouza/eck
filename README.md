@@ -29,7 +29,7 @@ If you wanna run this example without make any change on the manifest, please ma
 - [Node Affinity & Pod Affinity](#node-affinity-&-pod-affinity)
 - [Readiness Probe](#readiness-probe)
 - [JVM](#jvm)
-- [InitContainer / GCS repository plugin](#initcontainer-/-gcs-respository)
+- [InitContainer](#initcontainer)
 
 ### Architecture 
 GKE Instance type: **e2-standard-2 (2 vCPUs, 8 GB memory)**
@@ -175,7 +175,7 @@ If you don't explicitly define the resources, Elasticsearch will start with 2Gi 
               memory: 4Gi
 ```
 
-#### InitContainer / GCS repository plugin
+#### InitContainer
 To install plugins we need to define a initContainers to download & install before the Elasticsearch node start. As this example is prepered to be executed into production environment, snapshots are a crutial feature for this workload.
 
 ```
