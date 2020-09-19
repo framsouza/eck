@@ -8,8 +8,7 @@ This is a collection of showcase example to help you to use **Elastic Cloud on K
 - repository plugin
 - node & pod affinity
 - readinessProbe
-- JVM
-- initContainer / gcs repository plugin
+- podDisruptionBudget
 
 ### Before start
 If you wanna run this example without make any change on the manifest, please make sure you're using the following configuration:
@@ -30,9 +29,13 @@ If you wanna run this example without make any change on the manifest, please ma
 - [Readiness Probe](#readiness-probe)
 - [JVM](#jvm)
 - [InitContainer](#initcontainer)
+- [updateStrategy](#updateStrategy)
+- [podDisruptionBudget](#podDisruptionBudget)
 
 ### Architecture 
-GKE Instance type: **e2-standard-2 (2 vCPUs, 8 GB memory)**
+6 GKE Instance type: **e2-standard-2 (2 vCPUs, 8 GB memory)**
+3 Elasticsearch data node (30Gi disk, 2Gi JVM, 4Gi memory)
+3 Elasticsearch master node (10Gi disk, 1Gi JVM, 2Gi memory)
 
 ![ECK Architecture](img/architecture.png)
 
@@ -187,6 +190,10 @@ To install plugins we need to define a initContainers to download & install befo
             bin/elasticsearch-plugin install --batch repository-gcs
           name: install-plugins
 ```
+
+#### updateStrategy
+
+#### podDisruptionBudget
 
 ### To be implemented
 
