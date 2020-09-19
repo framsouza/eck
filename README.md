@@ -88,7 +88,13 @@ For production workloads is highly recommended to configure your own volume clai
         storageClassName: fast-europe-west3
 ```
 
-#### Pod template
+#### Node Affinity & Pod Affinity
+The affinity feature restrict scheduling pods in a group of Kubernetes nodes based on labels.Node affinity is conceptually similar to **nodeSelector** which defined in qhich nodes your pod will be scheduled on based on the label. nodeAffinity greatly extends the types of constrains you can express using enhancements labels.
+
+`podAntiAffinity` will prevent scheduling Elasticsearch nodes on the same host.
+
+In this example `podAffinity` & `nodeAffinity` are using **requiredDuringSchedulingIgnoredDuringExecution** affinity type. That means, a **hard** limit which rules must be met for a pod to be scheduled in a node. In this example, we're defining something like: "only run the pod on nodes in a zone **europe-west3-a** AND with a label called **pool** : **elasticseasrch**.
+
 
 ```
     podTemplate:
