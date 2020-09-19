@@ -1,6 +1,15 @@
 # ECK
+===================
 
-This is a collection of showcase example to help you to use **Elastic Cloud on Kubernetes** on **GCP** as a real production environment.
+This is a collection of showcase example to help you to use **Elastic Cloud on Kubernetes** on **GCP** as a real production environment using the following features:
+
+- dedicated nodes
+- zone awareness
+- repository plugin
+- node & pod affinity
+- readinessProbe
+- JVM
+- initContainer / gcs repository plugin
 
 ### Before start
 If you wanna run this example without make any change on the manifest, please make sure you're using the following configuration:
@@ -14,14 +23,16 @@ If you wanna run this example without make any change on the manifest, please ma
 
 ### Features implemented
 
-- Dedicated nodes
-- Zone awareness
-- GCS repository plugin
-- Node & Pod Affinity
-- ReadinessProbe
-- Resource management 
+- [HTTP Settings](#HTTP Settings "Go to HTTP Settings")
+- Node Configuration
+- Volume Claim
+- Node Affinity & Pod Affinity
+- Readiness Probe
+- JVM
+- InitContainer / GCS repository plugin
 
 ### Architecture 
+GKE Instance type: **e2-standard-2 (2 vCPUs, 8 GB memory)**
 
 ![ECK Architecture](img/architecture.png)
 
@@ -181,5 +192,3 @@ To install plugins we need to define a initContainers to download & install befo
 
 - Setup my own certificate
 - Cronjob with snapshot config
-
-
