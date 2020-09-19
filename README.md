@@ -24,12 +24,12 @@ If you wanna run this example without make any change on the manifest, please ma
 ### Features implemented
 
 - [HTTP Settings](#http-settings "Go to HTTP Settings")
-- Node Configuration
-- Volume Claim
-- Node Affinity & Pod Affinity
-- Readiness Probe
-- JVM
-- InitContainer / GCS repository plugin
+- [Node Configuration](#node-configuration)
+- [Volume Claim](#volume-claim)
+- [Node Affinity & Pod Affinity](#node-affinity-&-pod-affinity)
+- [Readiness Probe](#readiness-probe)
+- [JVM](#jvm)
+- [InitContainer / GCS repository plugin](#initcontainer-/-gcs-respository)
 
 ### Architecture 
 GKE Instance type: **e2-standard-2 (2 vCPUs, 8 GB memory)**
