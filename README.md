@@ -93,8 +93,7 @@ The affinity feature restrict scheduling pods in a group of Kubernetes nodes bas
 
 `podAntiAffinity` will prevent scheduling Elasticsearch nodes on the same host.
 
-In this example `podAffinity` & `nodeAffinity` are using **requiredDuringSchedulingIgnoredDuringExecution** affinity type. That means, a **hard** limit which rules must be met for a pod to be scheduled in a node. In this example, we're defining something like: "only run the pod on nodes in a zone **europe-west3-a** AND with a label called **pool** : **elasticseasrch**.
-
+In this example `podAffinity` & `nodeAffinity` are using **requiredDuringSchedulingIgnoredDuringExecution** affinity type. That means, a **hard** limit which rules must be met for a pod to be scheduled in a node. In this example, we're defining something like: "only run the pod on nodes in a zone **europe-west3-a** AND with a label called **pool** : **elasticseasrch**".
 
 ```
     podTemplate:
@@ -121,6 +120,61 @@ In this example `podAffinity` & `nodeAffinity` are using **requiredDuringSchedul
               topologyKey: kubernetes.io/hostname
         nodeSelector:
           pool: elasticsearch
+```
+
+#### Readiness Probe
+Readiness probe is used to know when a container is ready to start accepting traffic. Here we're increasing the timeout from 3 to 10 seconds.
+
+```
+        containers:
+        - name: elasticsearch
+          readinessProbe:
+            exec:
+              command:
+              - bash
+              - -c
+              - /mnt/elastic-internal/scripts/readiness-probe-script.sh
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 12
+            successThreshold: 1
+            timeoutSeconds: 12
+          env:
+          - name: READINESS_PROBE_TIMEOUT
+            value: "10"
+```
+
+#### JVM
+Our dead JVM configuration is defined using a environment variable, as usual we're using half of memory to JVM.
+
+```
+          - name: ES_JAVA_OPTS
+            value: -Xms2g -Xmx2g
+```
+
+#### Resources definition
+We're defining `request` & `limit` with the same value to minimize disruption caused by pod evictions due a resources utilization. In this example I'm using nodes with 6Gi of memory.
+
+If you don't explicitly define the resources, Elasticsearch will start with 2Gi requests/limits .
+```
+          resources:
+            limits:
+              memory: 4Gi
+            requests:
+              memory: 4Gi
+```
+
+#### InitContainer / GCS repository plugin
+To install plugins we need to define a initContainers to download & install before the Elasticsearch node start. As this example is prepered to be executed into production environment, snapshots are a crutial feature for this workload.
+
+```
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - |
+            bin/elasticsearch-plugin install --batch repository-gcs
+          name: install-plugins
 ```
 
 ### To be implemented
