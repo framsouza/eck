@@ -7,8 +7,9 @@ This is a collection of showcase example to help you to use **Elastic Cloud on K
 - zone awareness
 - repository plugin
 - node & pod affinity
-- readinessProbe
-- podDisruptionBudget
+- readiness rrobe
+- pod disruption budget
+- update strategy
 
 ### Before start
 If you wanna run this example without make any change on the manifest, please make sure you're using the following configuration:
@@ -33,9 +34,9 @@ If you wanna run this example without make any change on the manifest, please ma
 - [podDisruptionBudget](#podDisruptionBudget)
 
 ### Architecture 
-6 GKE Instance type: **e2-standard-2 (2 vCPUs, 8 GB memory)**
-3 Elasticsearch data node (30Gi disk, 2Gi JVM, 4Gi memory)
-3 Elasticsearch master node (10Gi disk, 1Gi JVM, 2Gi memory)
+- 6 GKE Instance type: **e2-standard-2 (2 vCPUs, 8 GB memory)**
+- 3 Elasticsearch data node (30Gi disk, 2Gi JVM, 4Gi memory)
+- 3 Elasticsearch master node (10Gi disk, 1Gi JVM, 2Gi memory)
 
 ![ECK Architecture](img/architecture.png)
 
@@ -107,7 +108,8 @@ The affinity feature restrict scheduling pods in a group of Kubernetes nodes bas
 
 `podAntiAffinity` will prevent scheduling Elasticsearch nodes on the same host.
 
-In this example `podAffinity` & `nodeAffinity` are using **requiredDuringSchedulingIgnoredDuringExecution** affinity type. That means, a **hard** limit which rules must be met for a pod to be scheduled in a node. In this example, we're defining something like: "only run the pod on nodes in a zone **europe-west3-a** AND with a label called **pool** : **elasticseasrch**".
+In this example `podAffinity` & `nodeAffinity` are using **requiredDuringSchedulingIgnoredDuringExecution** affinity type. That means, a **hard** limit which rules must be met for a pod to be scheduled in a node. In this example, we're defining something like: "only run the pod on nodes in a zone **europe-west3-a** AND with a label called **pool** : **elasticseasrch**". By doing this, we have the guarantee that Elasticsearch node will be started only on those nodes.
+
 
 ```
     podTemplate:
@@ -169,7 +171,7 @@ Our dead JVM configuration is defined using a environment variable, as usual we'
 #### Resources definition
 We're defining `request` & `limit` with the same value to minimize disruption caused by pod evictions due a resources utilization. In this example I'm using nodes with 6Gi of memory.
 
-If you don't explicitly define the resources, Elasticsearch will start with 2Gi requests/limits .
+Keep in mind if you don't explicitly define the resources, Elasticsearch will start with 2Gi requests/limits .
 ```
           resources:
             limits:
@@ -192,8 +194,26 @@ To install plugins we need to define a initContainers to download & install befo
 ```
 
 #### updateStrategy
+We're defining `updateStrategy` to control number of simultaneous changes in the Elasticsearch cluster. `maxSurge: 1` means only one new Pod is created at a time. After the first new Pod is Ready, an old Pod is killed and the second new Pod is created. Where `maxSurge` determines how many new Pods to create, `maxUnavailable` determines how many old Pods to kill. In this case, we can only kill 1 old Pod at a time. This ensures the capacity is always at least 3 - 1 Pods.
+
+```
+  updateStrategy:
+    changeBudget:
+      maxSurge: 1
+      maxUnavailable: 1
+```
 
 #### podDisruptionBudget
+Here we're saying we need at least 2 Elasticsearch nodes running in case of disruption while Kubernetes cluster administrator manage Kubernetes nodes. It will prevent a good health in your cluster.
+
+```
+  podDisruptionBudget:
+    spec:
+      minAvailable: 2
+      selector:
+        matchLabels:
+          elasticsearch.k8s.elastic.co/cluster-name: elastic-prod
+```
 
 ### To be implemented
 
