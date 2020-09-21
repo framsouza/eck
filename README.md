@@ -217,5 +217,10 @@ Here we're saying we need at least 2 Elasticsearch nodes running in case of disr
 
 ### To be implemented
 
-- Setup my own certificate
+- Setup my own certificate + cert-manager
 - Cronjob with snapshot config
+
+- - - -
+
+If you have any question don't hesitate in reaching me out fram.souza14@gmail.com
+
