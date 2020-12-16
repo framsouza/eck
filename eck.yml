@@ -79,8 +79,10 @@ spec:
           resources:
             limits:
               memory: 4Gi
+              cpu: 500m
             requests:
               memory: 4Gi
+              cpu: 500m
         initContainers:
         - command:
           - sh
@@ -154,8 +156,10 @@ spec:
           resources:
             limits:
               memory: 4Gi
+              cpu: 500m              
             requests:
               memory: 4Gi
+              cpu: 500m
         initContainers:
         - command:
           - sh
@@ -229,8 +233,10 @@ spec:
           resources:
             limits:
               memory: 4Gi
+              cpu: 500m
             requests:
               memory: 4Gi
+              cpu: 500m
         initContainers:
         - command:
           - sh
@@ -304,8 +310,10 @@ spec:
           resources:
             limits:
               memory: 2Gi
+              cpu: 500m
             requests:
               memory: 2Gi
+              cpu: 500m
         initContainers:
         - command:
           - sh
@@ -379,8 +387,10 @@ spec:
           resources:
             limits:
               memory: 2Gi
+              cpu: 500m
             requests:
               memory: 2Gi
+              cpu: 500m
         initContainers:
         - command:
           - sh
@@ -454,8 +464,10 @@ spec:
           resources:
             limits:
               memory: 2Gi
+              cpu: 500m
             requests:
               memory: 2Gi
+              cpu: 500m
         initContainers:
         - command:
           - sh
