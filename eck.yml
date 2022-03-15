@@ -9,8 +9,9 @@ spec:
       metadata:
         annotations:
           cloud.google.com/load-balancer-type: Internal
-          elasticsearch.k8s.elastic.co/node-master: "false"
       spec:
+        selector:
+          elasticsearch.k8s.elastic.co/node-master: "false"
         type: LoadBalancer
   nodeSets:
   - name: data-zone-a
